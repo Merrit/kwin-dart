@@ -1,39 +1,81 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# KWin Dart
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Dart library for interacting with KDE's KWin window manager.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Load and unload KWin scripts
+- Check if scripts are loaded
+- Listen to script output
+- Interact with KWin's D-Bus interfaces
+- Control window management features through KWin's API
 
-## Getting started
+## Prerequisites
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- Linux running KDE Plasma with KWin window manager
+- Tested on KDE Plasma 6
+- D-Bus support
+- Dart SDK >=3.5.4
+
+## Installation
+
+Currently only available from git.
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  kwin:
+    git:
+      url: https://github.com/Merrit/kwin-dart.git
+      ref: main
+```
+
+I would consider adding it to pub.dev if there is enough interest.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+Basic usage example:
 
 ```dart
-const like = 'sample';
+import 'package:kwin/kwin.dart';
+
+void main() async {
+  // Create KWin interface instance
+  final kwin = KWin();
+
+  // Load a KWin script
+  await kwin.loadScript('/path/to/script.js', 'my-plugin');
+
+  // Check if script is loaded
+  final isLoaded = await kwin.isScriptLoaded('my-plugin');
+  print('Script loaded: $isLoaded');
+
+  // Listen to script output
+  kwin.scriptOutput.listen((output) {
+    print('Script output: $output');
+  });
+
+  // Clean up when done
+  await kwin.dispose();
+}
 ```
 
-## Additional information
+<!-- ## Advanced Usage
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+See the [API documentation](link-to-docs) for detailed information about available methods and features. -->
+
+## Notes
+
+- Script output listening requires KWin Scripting to be set to "Full Debug" mode
+  due to a persistent bug in KWin
+- Scripts cannot be reloaded, rather they must be unloaded first and then
+  reloaded - this is a limitation of KWin's scripting API.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
+
+## License
+
+MIT
