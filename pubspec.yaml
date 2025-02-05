@@ -1,6 +1,6 @@
 name: kwin
 description: A Dart package to interact with the KDE window manager KWin.
-version: 1.0.0
+version: 0.1.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
