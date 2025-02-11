@@ -44,6 +44,11 @@ class KWin {
   /// This method of listening to the output currently only works if KWin Scripting is set to
   /// `Full Debug`.
   Future<void> _listenToScriptOutput() async {
+    if (runningInFlatpak()) {
+      print('Cannot listen to script output in a Flatpak sandbox');
+      return;
+    }
+
     final process = await Process.start('journalctl', ['-b', '-f']);
 
     process.stdout
@@ -74,4 +79,9 @@ class KWin {
     await _kwinDBus.dispose();
     await _scriptOutputController.close();
   }
+}
+
+/// Returns `true` if the app is running in a Flatpak sandbox.
+bool runningInFlatpak() {
+  return Platform.environment.containsKey('FLATPAK_ID');
 }
